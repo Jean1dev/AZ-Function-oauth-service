@@ -1,6 +1,11 @@
-import * as mongoose from 'mongoose';
+import * as Mongoose from 'mongoose';
 
-const Usuario = new mongoose.Schema({
+export interface IUsuario extends Mongoose.Document {
+  login: string
+  password: string
+}
+
+const Usuario = new Mongoose.Schema({
   login: {
     type: String,
     required: true
@@ -9,6 +14,9 @@ const Usuario = new mongoose.Schema({
     type: String,
     required: true
   }
+}, {
+  timestamps: true,
+  collection: 'usuarios'
 })
 
-export default mongoose.model('Usuario', Usuario)
+export default Mongoose.model<IUsuario>('Usuario', Usuario)

@@ -15,5 +15,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/criar-usuario/index.js"
+  "scriptFile": "../dist/autenticar-via-login-password/index.js"
 }

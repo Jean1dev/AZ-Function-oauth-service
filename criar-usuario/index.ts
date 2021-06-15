@@ -1,17 +1,36 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+import * as mongoose from 'mongoose'
+import { MONGO_CONNECTION } from '../shared/contants'
+import { hash } from 'bcryptjs'
+import UsuarioModel from '../shared/model/usuario'
+
+mongoose.connect(MONGO_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('conectado com o mongo')
+})
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    context.log('HTTP trigger function processed a request.');
-    const name = (req.query.name || (req.body && req.body.name));
-    const responseMessage = name
-        ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-        : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+    const { login, password } = req.body
 
+    if (!login || !password) {
+        context.res = {
+            status: 404,
+            body: {
+                message: 'login ou password nao fornecido'
+            }
+        }
+
+        return
+    }
+
+    const passwordHash = await hash(password, 8)
+    const usuario = new UsuarioModel({ login, password: passwordHash })
+    const usuarioSave = await usuario.save()
     context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: responseMessage
-    };
-
+        body: usuarioSave
+    }
 };
 
 export default httpTrigger;
