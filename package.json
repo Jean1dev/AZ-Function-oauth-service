@@ -6,7 +6,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "prestart": "npm run build",
-    "start": "func start",
+    "start": "func start --port 7170",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
